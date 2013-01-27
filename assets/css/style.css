@@ -1,0 +1,115 @@
+body
+{
+	overflow: hidden;
+	font-family: "Helvetica", "Verdana", "sans-serif";
+}
+
+h1
+{
+   font-size: 1.6em;
+}
+
+ul.jqtree-tree div:hover
+{
+   background-color: rgba(0, 255, 0, 0.5);
+}
+
+.inset-text 
+{
+    text-shadow: 1px 1px 0px #DBDBDB;
+}
+
+.jqtree-title
+{
+   font-size: 0.8em;
+}
+
+.selected_file
+{
+   background-color: #444;
+   border-radius: 5px;
+   -moz-border-radius: 5px;
+   -webkit-border-radius: 5px;
+}
+
+.selected_file span.jqtree-title
+{
+   color: #ffffff;
+}
+
+#app_name
+{
+   white-space: nowrap;
+   line-height: 0em;
+   text-align: center;
+}
+
+#viewer_container
+{
+	background-color: #444;
+   overflow: hidden;
+}
+
+#material_select
+{
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   z-index: 1;
+}
+
+#load_progress
+{
+   position: absolute;
+   bottom: 10px;
+   right: 10px;
+   left: 10px;
+   z-index: 1;
+}
+
+#model_info
+{
+   position: absolute;
+   left: 10px;
+   top: 10px;
+   z-index: 1;
+}
+
+#viewer
+{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	bottom: 10px;
+	right: 10px;
+	border: 1px solid #CCC;
+	background-color: white;
+}
+
+#resizable_menu
+{
+	background-color: #444;
+   overflow-x: hidden;
+}
+
+#file_drop_container
+{
+	padding: 10px;
+   border: 1px solid #CCC;
+   background-color: white;
+}
+
+#file_drop
+{
+   border: 2px dashed #BBB;
+   padding: 50px 25px;
+   text-align: center;
+   color: #BBB;
+}
+
+#file_list_container
+{
+	padding: 0px 10px 0px 10px;
+   border: 1px solid #CCC;
+   background-color: white;
+}

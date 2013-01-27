@@ -1,0 +1,28 @@
+{
+	"manifest_version": 2,
+	"name": "collada-viewer",
+   "version": "0.4",
+   "description": "A viewer for 3D models in the COLLADA file format.",
+   "icons":
+   {
+      "16": "cv-icon-16.png",
+      "48": "cv-icon-48.png",
+      "128": "cv-icon-128.png" 
+   },
+   "permissions": [ "unlimitedStorage" ],
+   "offline_enabled": true,
+   "requirements": 
+   {
+      "3D": 
+      {
+         "features": ["webgl"]
+      }
+   },
+   "app": 
+   {
+      "background": 
+      {
+         "scripts": ["assets/js/background.js"]
+      }
+   }
+}

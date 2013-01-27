@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+   
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>
+         collada-viewer
+      </title>
+      <!-- Application styles. -->
+      <link rel="stylesheet" href="assets/vendor/libs/jquery-layout/layout-default-latest.css">
+      <link rel="stylesheet" href="assets/vendor/libs/jquery-ui/jquery-ui-1.9.0.custom.min.css">
+      <link rel="stylesheet" href="assets/vendor/libs/jqTree/jqtree.css">
+      <link rel="stylesheet" href="assets/vendor/libs/jquery-contextMenu/jquery.contextMenu.css">
+      <link rel="stylesheet" href="assets/css/style.css">
+   </head>
+   
+   <body>
+      <div id="viewer_container" class="ui-layout-center">
+         <select id="material_select"></select>
+         <div id="load_progress"></div>
+         <div id="viewer">
+         </div>
+      </div>
+      <div id="resizable_menu" class="ui-layout-east">
+         <div>
+            <div id="file_drop_container">
+               <div id="file_drop">
+                  Drop .dae files
+               </div>
+            </div>
+            <div id="file_list_container">
+               <div id="file_list">
+               </div>
+            </div>
+         </div>
+         <h1 id="app_name" class="inset-text">
+               collada-viewer
+         </h1>
+      </div>
+      <!-- Application source. -->
+      <script data-main="assets/js/main" src="assets/vendor/libs/require/require.js">
+                                   
+      </script>
+   </body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap-3.0.0-wip.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome-ie7.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="brand" href="http://github.com/jsoverson/plato">Plato on Github</a>
+    <ul class="nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>assets/js/view/ColladaView.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="span6">
+      <h2 class="header">Maintainability</h2>
+      <p class="stat">110.24</p>
+    </div>
+    <div class="span6">
+      <h2 class="header">Estimated # Bugs</h2>
+      <p class="stat">2.14</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span6">
+      <h2 class="header">Difficulty</h2>
+      <p class="stat">30.38</p>
+    </div>
+    <div class="span6">
+      <h2 class="header">SLOC/LSLOC</h2>
+      <p class="stat">207 / 101</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="span6">
+      <h3 class="chart-header">By Complexity</h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="span6">
+      <h3 class="chart-header">By SLOC</h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="span12">/** @file ColladaView.js
+ *  @fileOverview 3D view of a COLLADA model.
+ *  @author cs_brandt
+ *  @date 11/12/2012 
+ */
+
+
+/**
+ *  @author Paul Irish
+ */
+window.requestAnimFrame = (function()
+{
+   "use strict";
+   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+   function( /* function */ callback, /* DOMElement */ element)
+   {
+      window.setTimeout(callback, 1000 / 60);
+   };
+}());
+
+
+define(['jquery', 'underscore', 'backbone', 'jqueryui', 'three', 'order!ColladaLoader', 'order!TrackballControls'], function($, _, Backbone)
+{
+	var ColladaView = Backbone.View.extend(
+	{
+		initialize: function()
+		{
+         var screenWidth = $(this.el).width();
+         var screenHeight = $(this.el).height();
+
+         this.scene = new THREE.Scene();
+         this.camera = new THREE.PerspectiveCamera(60, screenWidth / screenHeight, 0.1, 1000);
+         this.camera.position.set(4, 4, 3);
+         this.controls = {};
+
+         var ambient = new THREE.AmbientLight(0x050505);
+			this.scene.add(ambient);
+
+			var directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
+			directionalLight.position.set(2, 1.2, 10).normalize();
+			this.scene.add(directionalLight);
+
+			directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+			directionalLight.position.set(-2, 1.2, -10).normalize();
+			this.scene.add(directionalLight);
+
+			var pointLight = new THREE.PointLight(0xffaa00, 2);
+			pointLight.position.set(2000, 1200, 10000);
+			this.scene.add(pointLight);
+
+         // bind on files opened by the filesystem
+         this.model.get("fs").bind("change:openedFile", this.loadFile, this);
+         // bind on material selection
+         this.model.get("material").bind("change:selectedMaterial", this.updateMaterial, this);
+         // bind on window resize
+         $(window).resize(this.onResize.bind(this));
+
+			// init renderer
+	      try
+	      {
+	         if ( !! window.WebGLRenderingContext && !! document.createElement('canvas').getContext('experimental-webgl'))
+	         {
+	            this.renderer = new THREE.WebGLRenderer(
+	            {
+	               antialias: true
+	            });
+	         }
+	         else
+	         {
+	            this.renderer = new THREE.CanvasRenderer();
+	         }
+	      }
+	      catch (e)
+	      {
+	         this.renderer = new THREE.CanvasRenderer();
+	      }
+
+	      // Grid
+
+			var size = 14, step = 1;
+
+			var geometry = new THREE.Geometry();
+			var material = new THREE.LineBasicMaterial( { color: 0xcccccc, opacity: 0.2 } );
+
+			for (var i = - size; i <= size; i += step) 
+			{
+				geometry.vertices.push( new THREE.Vector3( - size, - 0.04, i ));
+				geometry.vertices.push( new THREE.Vector3(   size, - 0.04, i ));
+
+				geometry.vertices.push( new THREE.Vector3(i, - 0.04, - size ));
+				geometry.vertices.push( new THREE.Vector3(i, - 0.04,   size ));
+			}
+
+			var line = new THREE.Line(geometry, material, THREE.LinePieces);
+			this.scene.add(line);
+
+	      // start the renderer
+	      this.renderer.setSize(screenWidth, screenHeight);
+
+	      this.controls.trackball = new THREE.TrackballControls(this.camera, this.renderer.domElement);
+	      this.controls.trackball.staticMoving = true;
+
+	      $(this.el)[0].appendChild(this.renderer.domElement);
+
+	      this.animate();
+		},
+
+		animate: function()
+		{
+			window.requestAnimFrame(this.animate.bind(this));
+
+			this.render();
+		},
+
+		render: function()
+		{
+			this.controls.trackball.update();
+			this.renderer.render(this.scene, this.camera);
+		},
+
+		loadFile: function(model)
+		{
+			var file = model.get("openedFile");
+			var fileObjURL = window.URL.createObjectURL(file);
+
+			var colladaLoader = new THREE.ColladaLoader();
+         colladaLoader.options.convertUpAxis = true;
+
+			colladaLoader.load(fileObjURL, function(collada)
+			{
+				// if a model is already loaded
+            if (this.currentModel)
+            {
+            	this.scene.remove(this.currentModel);
+               this.renderer.deallocateObject(this.currentModel);
+
+               this.currentModel = null;
+            }
+
+				var dae = collada.scene;
+            // scale model
+				dae.scale.x = dae.scale.y = dae.scale.z = 0.002;
+				dae.updateMatrix();
+
+            // set current model
+            this.currentModel = dae;
+            // add model to scene
+				this.scene.add(dae);
+
+            this.options.materialSelect.reset();
+				$(this.options.progressBar).hide();
+
+			}.bind(this), this.updateLoadProgress.bind(this));
+
+		},
+
+		updateLoadProgress: function(progressInfoObj)
+		{
+         $(this.options.progressBar).show();
+
+			$(this.options.progressBar).progressbar(
+			{
+				value: 100 / (progressInfoObj.total / progressInfoObj.loaded)
+
+			});
+			
+		},
+
+		applyMaterial: function(model)
+		{
+			// apply material
+			model.traverse(function(child) 
+			{
+				if (child.material) 
+				{
+					child.geometry.computeTangents();
+					child.material = this.material;
+				}
+
+			}.bind(this));
+		},
+
+		updateMaterial: function(model)
+		{
+         var materialIndex = model.get("selectedMaterial");
+
+			this.material = model.get("materialLibrary")[materialIndex];
+
+         // if there is a model loaded AND a material selected
+         // apply the new material to it
+			if (this.currentModel && this.material)
+			{
+				this.applyMaterial(this.currentModel);
+			}
+		},
+
+		onResize: function()
+		{
+			// set a timer so we check for
+			// new dimensions AFTER the resize is completed
+			setTimeout(function() 
+			{
+				this.camera.aspect = $(this.el).width() / $(this.el).height();
+            this.camera.updateProjectionMatrix();
+
+            this.renderer.setSize($(this.el).width(), $(this.el).height());
+
+            // todo controls?
+
+         }.bind(this), 500);
+		}
+
+	});
+
+	return ColladaView;
+
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+
+</body>
+</html>
