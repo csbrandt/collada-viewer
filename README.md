@@ -1,3 +1,6 @@
+collada-viewer
+================
+
 collada-viewer is a HTML5 app that brings together [ColladaLoader.js](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/ColladaLoader.js), [three.js](https://github.com/mrdoob/three.js), and [HTML5 File API](http://www.w3.org/TR/FileAPI/) to allow easy persistent storage and loading of 3D models in the [COLLADA](http://en.wikipedia.org/wiki/COLLADA) file format.
 
 ## Dependencies
