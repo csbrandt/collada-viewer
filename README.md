@@ -1,4 +1,22 @@
+collada-viewer is a HTML5 app that brings together [ColladaLoader.js](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/ColladaLoader.js), [three.js](https://github.com/mrdoob/three.js), and [HTML5 File API](http://www.w3.org/TR/FileAPI/) to allow easy persistent storage and loading of 3D models in the [COLLADA](http://en.wikipedia.org/wiki/COLLADA) file format.
 
+## Dependencies
+
++ [jQuery - v1.8.2](http://jquery.com/)
++ [jQuery UI - v1.9.0](http://jqueryui.com/)
++ [jquery.layout - v1.3.0](http://layout.jquery-dev.net/)
++ [jqTree](http://mbraak.github.com/jqTree/)
++ [jQuery UI Position - v1.9.0-RC1](http://jqueryui.com)
++ [jQuery-contextMenu - v1.5.25](https://github.com/medialize/jQuery-contextMenu)
++ [Underscore.js - v1.4.2](http://underscorejs.org/)
++ [Backbone.js - v0.9.2](http://backbonejs.org/)
++ [RequireJS - v2.1.0](http://requirejs.org/)
++ [order.js](http://requirejs.org/docs/release/1.0.5/minified/order.js)
++ [text.js](https://github.com/requirejs/text)
++ [three.js - r53](https://github.com/mrdoob/three.js/)
++ [ColladaLoader.js](https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/ColladaLoader.js)
++ [TrackballControls.js](https://github.com/mrdoob/three.js/blob/master/examples/js/controls/TrackballControls.js)
++ [HTML5 File API](http://www.w3.org/TR/FileAPI/)
 
 ## License
 
